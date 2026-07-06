@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Akreditasi · Jurnalistik Islam</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <style>
+        /* ============================================================ */
+        /*  TEMA HIJAU GELAP + GLOW + GLASSMORPHISM                      */
+        /* ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(ellipse at 20% 20%, #0d2a1a, #05180e 70%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #d4e8d4;
+        }
+
+        @keyframes glowPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(34, 197, 94, 0.02);
+            }
+            50% {
+                box-shadow: 0 0 50px rgba(34, 197, 94, 0.07);
+            }
+        }
+
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            background: rgba(8, 25, 15, 0.6);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border-radius: 44px;
+            padding: 28px 32px 36px;
+            border: 1px solid rgba(34, 197, 94, 0.10);
+            box-shadow: 0 20px 60px rgba(0, 10, 5, 0.6), 0 0 60px rgba(34, 197, 94, 0.03);
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        /* ===== HEADER ===== */
+        .brand {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.12);
+            margin-bottom: 24px;
+        }
+
+        .brand-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-left .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: radial-gradient(circle at 30% 30%, #2a9d5a, #0a3a1e);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ccffd8;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.20);
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #c6f0d6;
+            letter-spacing: -0.3px;
+            line-height: 1.2;
+            text-shadow: 0 0 30px rgba(34, 197, 94, 0.06);
+        }
+        .brand-text h1 small {
+            font-weight: 400;
+            font-size: 15px;
+            color: #8bc9a8;
+            margin-left: 6px;
+        }
+        .brand-text .sub {
+            font-size: 13px;
+            color: #88c0a0;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+
+        /* ===== DASHBOARD GRID ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        /* ===== MAIN CARD ===== */
+        .main-card {
+            background: rgba(8, 25, 15, 0.35);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            border: 1px solid rgba(34, 197, 94, 0.08);
+            box-shadow: 0 8px 30px rgba(0, 8, 4, 0.3);
+            overflow: hidden;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-card:hover {
+            border-color: rgba(34, 197, 94, 0.2);
+            box-shadow: 0 8px 40px rgba(34, 197, 94, 0.05);
+        }
+
+        .main-card-header {
+            padding: 16px 20px 10px 20px;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .main-card-header .icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .main-card-header .title-group {
+            flex: 1;
+        }
+
+        .main-card-header .title-group h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #d4f0de;
+            line-height: 1.2;
+        }
+
+        .main-card-header .title-group .subtitle {
+            font-size: 12px;
+            color: #8bc9a8;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .main-card-body {
+            padding: 12px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        /* ===== SUB-CARD ===== */
+        .sub-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 12px 16px;
+            border: 1px solid rgba(34, 197, 94, 0.06);
+            transition: 0.15s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .sub-card:hover {
+            background: rgba(34, 197, 94, 0.05);
+            border-color: rgba(34, 197, 94, 0.15);
+            transform: translateX(4px);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.02);
+        }
+
+        .sub-card .info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sub-card .info .label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #c6f0d6;
+        }
+
+        .sub-card .info .desc {
+            font-size: 12px;
+            color: #8bc9a8;
+            opacity: 0.7;
+        }
+
+        .sub-card .badge {
+            background: rgba(34, 197, 94, 0.12);
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #b8e0c8;
+            white-space: nowrap;
+        }
+
+        .sub-card .arrow {
+            font-size: 14px;
+            color: #6a9a7a;
+            opacity: 0.4;
+            transition: 0.2s;
+        }
+
+        .sub-card:hover .arrow {
+            opacity: 0.8;
+            transform: translateX(4px);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: rgba(8, 25, 15, 0.9);
+            backdrop-filter: blur(18px);
+            border-radius: 32px;
+            max-width: 1000px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 32px 32px;
+            border: 1px solid rgba(34, 197, 94, 0.12);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 80px rgba(34, 197, 94, 0.04);
+            animation: modalFade 0.25s ease-out;
+            position: relative;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            color: #b8e0c8;
+            font-size: 22px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+            z-index: 10;
+        }
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #eaffef;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #d4f0de;
+            margin-bottom: 8px;
+        }
+        .modal-subtitle {
+            font-size: 14px;
+            color: #8bc9a8;
+            margin-bottom: 16px;
+        }
+
+        .modal-body .table-wrap {
+            overflow-x: auto;
+            border-radius: 16px;
+            background: rgba(8, 25, 15, 0.3);
+            border: 1px solid rgba(34, 197, 94, 0.06);
+            margin: 12px 0 16px;
+        }
+        .modal-body table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 500px;
+        }
+        .modal-body th {
+            background: rgba(34, 197, 94, 0.07);
+            color: #c6f0d6;
+            font-weight: 600;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.10);
+        }
+        .modal-body td {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(34, 197, 94, 0.04);
+            color: #d0e8d8;
+        }
+        .modal-body tr:hover td {
+            background: rgba(34, 197, 94, 0.02);
+        }
+
+        .modal-body .narrative {
+            background: rgba(34, 197, 94, 0.04);
+            border-left: 4px solid rgba(34, 197, 94, 0.25);
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin: 12px 0 8px;
+            line-height: 1.7;
+            color: #c0e0d0;
+        }
+        .modal-body .narrative strong {
+            color: #d4f0de;
+        }
+
+        .modal-body .stat-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            background: rgba(8, 25, 15, 0.25);
+            border-radius: 14px;
+            padding: 10px 18px;
+            border: 1px solid rgba(34, 197, 94, 0.06);
+            margin: 8px 0 14px;
+            font-size: 14px;
+            color: #b8e0c8;
+        }
+        .modal-body .stat-box span {
+            font-weight: 600;
+            color: #d4f0de;
+        }
+
+        .modal-body .chart-container {
+            margin: 16px 0;
+            background: rgba(8, 25, 15, 0.25);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(34, 197, 94, 0.06);
+        }
+        .modal-body .chart-container canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 200px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #6a9a7a;
+            opacity: 0.7;
+            border-top: 1px solid rgba(34, 197, 94, 0.06);
+            padding-top: 20px;
+            margin-top: 30px;
+        }
+        .footer strong {
+            color: #88c0a0;
+            opacity: 0.9;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 860px) {
+            .app-container {
+                padding: 16px 12px 24px;
+                border-radius: 28px;
+            }
+            .brand {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-card {
+                padding: 20px 16px 24px;
+                margin: 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .brand-text h1 {
+                font-size: 18px;
+            }
+            .brand-text h1 small {
+                font-size: 12px;
+                display: block;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="brand">
+            <div class="brand-left">
+                <div class="logo-icon">🌿</div>
+                <div class="brand-text">
+                    <h1>Dashboard Akreditasi Jurnalistik Islam</h1>
+                    <div class="sub">Fakultas Dakwah dan Komunikasi Islam · IAIN Syaikh Abdurrahman Siddik Bangka Belitung</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== DASHBOARD GRID ===== -->
+        <div class="dashboard-grid" id="dashboardGrid"></div>
+
+        <!-- ===== MODAL ===== -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-card" id="modalCard">
+                <button class="modal-close" id="modalClose">✕</button>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="footer">
+            <span>Dashboard Akreditasi – Prodi <strong>Jurnalistik Islam</strong> · Fakultas Dakwah dan Komunikasi Islam</span><br />
+            <span style="font-size:12px;">IAIN Syaikh Abdurrahman Siddik Bangka Belitung</span>
+        </footer>
+
+    </div>
+
+    <script>
+        // ================================================================
+        //  DATA – 13 MAIN CARD dengan SUB-CARD (VTMS di urutan pertama)
+        // ================================================================
+
+        const dashboardData = [{
+            id: 'vtms',
+            icon: '🎯',
+            title: 'VTMS',
+            subtitle: 'Visi, Misi, Tujuan, dan Sasaran Strategis',
+            subCards: [
+                { id: 'vtms-visi', label: 'Visi', desc: 'Menjadi prodi unggul di bidang jurnalistik Islam', badge: 'Terdefinisi' },
+                { id: 'vtms-misi', label: 'Misi', desc: '8 misi strategis pengembangan prodi', badge: 'Terukur' },
+                { id: 'vtms-tujuan', label: 'Tujuan', desc: '5 tujuan jangka menengah & panjang', badge: 'Terarah' },
+                { id: 'vtms-sasaran', label: 'Sasaran Strategis', desc: '10 sasaran strategis 2024–2028', badge: 'Terpantau' },
+            ]
+        }, {
+            id: 'kurikulum',
+            icon: '📘',
+            title: 'Kurikulum & Pembelajaran',
+            subtitle: 'Struktur, capaian, dan integrasi riset',
+            subCards: [
+                { id: '6.1', label: 'Dokumen Kurikulum', desc: '52 MK · 144 SKS', badge: 'Terakreditasi' },
+                { id: '6.2', label: 'Pengukuran CPL', desc: '13 MK terintegrasi riset', badge: 'Sesuai' },
+                { id: '6.3', label: 'Magang Kependidikan', desc: '9 dosen pembimbing', badge: 'Aktif' },
+                { id: '6.4', label: 'Kegiatan Akademik', desc: '13 kegiatan luar kelas', badge: 'Berjalan' },
+                { id: '6.5', label: 'Pembimbingan TA', desc: '16 dosen · 12 mhs/dosen', badge: 'Sesuai' },
+            ]
+        }, {
+            id: 'mahasiswa',
+            icon: '🎓',
+            title: 'Mahasiswa',
+            subtitle: 'Seleksi, prestasi, dan kepuasan',
+            subCards: [
+                { id: '3.1', label: 'Seleksi Mahasiswa Baru', desc: '5 tahun terakhir', badge: 'Stabil' },
+                { id: '3.2', label: 'Prestasi Mahasiswa', desc: '15 prestasi', badge: 'Unggul' },
+                { id: '3.3-1', label: 'HKI – Paten', desc: 'Belum ada data', badge: 'Perlu' },
+                { id: '3.3-2', label: 'HKI – Hak Cipta', desc: '45 karya', badge: 'Produktif' },
+                { id: '3.3-3', label: 'Buku ber-ISBN', desc: '30 judul', badge: 'Kolektif' },
+                { id: '3.3-4', label: 'Publikasi Ilmiah', desc: '17 artikel Sinta 4', badge: 'Baik' },
+                { id: '3.4', label: 'Kepuasan Mahasiswa', desc: '84% sangat baik', badge: 'Memuaskan' },
+            ]
+        }, {
+            id: 'dosen',
+            icon: '👨‍🏫',
+            title: 'Dosen & Tenaga Kependidikan',
+            subtitle: 'Kualifikasi, beban kerja, dan pengembangan',
+            subCards: [
+                { id: '4.1', label: 'Dosen Tetap', desc: '16 dosen · 1 Guru Besar', badge: 'Lengkap' },
+                { id: '4.2', label: 'Beban Kerja DTPS', desc: 'Rata-rata 29 SKS/tahun', badge: 'Optimal' },
+                { id: '4.3', label: 'Rekognisi Kepakaran', desc: '44 rekognisi', badge: 'Diakui' },
+                { id: '4.4', label: 'Pengembangan DTPS', desc: '14 dosen terlatih', badge: 'Aktif' },
+                { id: '4.5', label: 'Tenaga Kependidikan', desc: '4 jenis', badge: 'Tersedia' },
+                { id: '4.6', label: 'Pengembangan Tendik', desc: '11 tendik terlatih', badge: 'Baik' },
+            ]
+        }, {
+            id: 'sarana',
+            icon: '🏛️',
+            title: 'Sarana, Prasarana & Dana',
+            subtitle: 'Fasilitas dan anggaran',
+            subCards: [
+                { id: '5.1', label: 'Penggunaan Dana', desc: 'Rp 1,6 M/tahun per prodi', badge: 'Memadai' },
+                { id: '5.2', label: 'Sarana Lab', desc: '41 item', badge: 'Lengkap' },
+                { id: '5.3', label: 'Prasarana', desc: '25 gedung · terawat', badge: 'Baik' },
+                { id: '5.4', label: 'TIK', desc: '7 sistem terintegrasi', badge: 'Muktahir' },
+            ]
+        }, {
+            id: 'lulusan',
+            icon: '📊',
+            title: 'Lulusan & Tracer Study',
+            subtitle: 'IPK, masa studi, dan daya serap',
+            subCards: [
+                { id: '6.6', label: 'IPK Lulusan', desc: 'Rata-rata 3,64', badge: 'Cemerlang' },
+                { id: '6.7', label: 'Masa Studi', desc: '4,0–4,9 tahun', badge: 'Tepat waktu' },
+                { id: '6.8', label: 'Lulusan Bekerja', desc: '90% terserap', badge: 'Tinggi' },
+                { id: '6.9', label: 'Waktu Tunggu Kerja', desc: '85% < 6 bulan', badge: 'Cepat' },
+                { id: '6.10', label: 'Kesesuaian Bidang', desc: '95% sesuai', badge: 'Relevan' },
+                { id: '6.11', label: 'Kepuasan Pengguna', desc: '87% sangat baik', badge: 'Memuaskan' },
+            ]
+        }, {
+            id: 'penelitian',
+            icon: '🔬',
+            title: 'Penelitian & Publikasi',
+            subtitle: 'Riset dosen dan kolaborasi mahasiswa',
+            subCards: [
+                { id: '7.1', label: 'Penelitian DTPS', desc: '12 judul (3 tahun)', badge: 'Produktif' },
+                { id: '7.2', label: 'Penelitian + Mahasiswa', desc: '11 dosen melibatkan mhs', badge: 'Kolaboratif' },
+                { id: '7.3', label: 'Publikasi Ilmiah', desc: '60 jurnal terakreditasi', badge: 'Unggul' },
+                { id: '7.4', label: 'Sinta 2 / Internasional', desc: '6 publikasi', badge: 'Bereputasi' },
+                { id: '7.5', label: 'Karya Disitasi', desc: '160+ sitasi', badge: 'Berdampak' },
+            ]
+        }, {
+            id: 'pkm',
+            icon: '🤝',
+            title: 'Pengabdian kepada Masyarakat',
+            subtitle: 'PkM dosen dan mahasiswa',
+            subCards: [
+                { id: '8.1', label: 'PkM DTPS', desc: '13 judul (3 tahun)', badge: 'Aktif' },
+                { id: '8.2', label: 'PkM + Mahasiswa', desc: '14 kegiatan', badge: 'Terlibat' },
+            ]
+        }, {
+            id: 'kerjasama',
+            icon: '🤝',
+            title: 'Kerjasama Tridharma',
+            subtitle: 'Pendidikan, Penelitian, PkM',
+            subCards: [
+                { id: '2.1-1', label: 'Kerjasama Pendidikan', desc: '15 mitra', badge: 'Luas' },
+                { id: '2.1-2', label: 'Kerjasama Penelitian', desc: '9 mitra', badge: 'Kolaboratif' },
+                { id: '2.1-3', label: 'Kerjasama PkM', desc: '8 mitra', badge: 'Bersinergi' },
+            ]
+        }, {
+            id: 'tata-kelola',
+            icon: '⚖️',
+            title: 'Tata Kelola',
+            subtitle: 'GUG, PPKS, dan Mitigasi Risiko',
+            subCards: [
+                { id: 'gug-ppks', label: 'GUG – PPKS', desc: 'Pencegahan & Penanganan Kekerasan Seksual', badge: 'Aktif' },
+                { id: 'gug-mitigasi', label: 'GUG – Mitigasi Risiko', desc: 'Manajemen risiko & kontijensi', badge: 'Siap' },
+                { id: 'tata-kelola-umum', label: 'Tata Kelola Umum', desc: 'Struktur organisasi & kebijakan', badge: 'Terstruktur' },
+            ]
+        }, {
+            id: 'keuangan',
+            icon: '💰',
+            title: 'Keuangan (Financial Support)',
+            subtitle: 'Sumber daya dan bantuan finansial',
+            subCards: [
+                { id: 'keuangan-beasiswa', label: 'Beasiswa & Bantuan', desc: 'Beasiswa KIP, prestasi, dan lainnya', badge: 'Tersedia' },
+                { id: 'keuangan-operasional', label: 'Dana Operasional', desc: 'Anggaran prodi & fakultas', badge: 'Memadai' },
+                { id: 'keuangan-investasi', label: 'Investasi & Pengembangan', desc: 'Dana hibah & kerjasama', badge: 'Berkembang' },
+            ]
+        }, {
+            id: 'kepuasan-mitra',
+            icon: '⭐',
+            title: 'Kepuasan Pengguna & Mitra',
+            subtitle: 'Umpan balik dan kolaborasi',
+            subCards: [
+                { id: 'kepuasan-pengguna', label: 'Kepuasan Pengguna Lulusan', desc: 'Survey & tindak lanjut', badge: 'Tinggi' },
+                { id: 'kepuasan-mitra', label: 'Kepuasan Mitra Kerjasama', desc: 'Evaluasi kerjasama & hubungan', badge: 'Baik' },
+            ]
+        }, {
+            id: 'layanan-kemahasiswaan',
+            icon: '🛡️',
+            title: 'Layanan Kemahasiswaan',
+            subtitle: 'Kesehatan, K3, Akademik, dan Lainnya',
+            subCards: [
+                { id: 'layanan-kesehatan', label: 'Layanan Kesehatan', desc: 'Klinik, konseling, dan UKS', badge: 'Tersedia' },
+                { id: 'layanan-k3', label: 'K3 (Keselamatan & Kesehatan Kerja)', desc: 'Sosialisasi & protokol', badge: 'Siap' },
+                { id: 'layanan-akademik', label: 'Layanan Akademik', desc: 'Bimbingan, tutorial, dan administrasi', badge: 'Lengkap' },
+                { id: 'layanan-umum', label: 'Layanan Umum', desc: 'Informasi, pengaduan, dan fasilitas', badge: 'Terbuka' },
+            ]
+        }];
+
+        // ================================================================
+        //  DATA DETAIL (lengkap dengan analisis & visualisasi)
+        // ================================================================
+
+        const detailData = {};
+
+        // ---- VTMS ----
+        detailData['vtms-visi'] = {
+            title: 'Visi Program Studi Jurnalistik Islam',
+            subtitle: 'Arah pengembangan prodi menuju 2030',
+            headers: ['Komponen', 'Rumusan', 'Indikator'],
+            rows: [
+                ['Visi', 'Menjadi program studi jurnalistik Islam yang unggul, moderat, dan berdaya saing global pada tahun 2030', 'Terakreditasi Unggul'],
+                ['Fokus', 'Penguatan nilai-nilai Islam dalam jurnalistik kontemporer', 'Integrasi keilmuan'],
+                ['Posisi', 'Rujukan nasional dalam pengembangan jurnalistik Islam', 'Pengakuan publik'],
+            ],
+            stat: 'Visi terdefinisi · target 2030 · 3 indikator utama',
+            narrative: 'Visi Prodi Jurnalistik Islam mencerminkan komitmen untuk menjadi pusat pengembangan jurnalistik yang berbasis nilai-nilai Islam, moderat, dan berdaya saing global. Visi ini menjadi fondasi seluruh kebijakan dan program pengembangan prodi. Target tahun 2030 dengan akreditasi Unggul menjadi tolak ukur utama keberhasilan.',
+            chart: null
+        };
+
+        detailData['vtms-misi'] = {
+            title: 'Misi Program Studi Jurnalistik Islam',
+            subtitle: '8 misi strategis pengembangan prodi',
+            headers: ['No', 'Misi', 'Strategi'],
+            rows: [
+                ['1', 'Menyelenggarakan pendidikan jurnalistik yang bermutu dan berbasis nilai Islam', 'Pengembangan kurikulum & dosen'],
+                ['2', 'Melaksanakan penelitian di bidang jurnalistik dan komunikasi Islam', 'Publikasi & kolaborasi riset'],
+                ['3', 'Melaksanakan pengabdian kepada masyarakat berbasis jurnalistik', 'PkM & kemitraan'],
+                ['4', 'Mengembangkan keilmuan jurnalistik yang integratif', 'Kajian & penguatan keilmuan'],
+                ['5', 'Membangun jejaring nasional dan internasional', 'Kerjasama tridharma'],
+                ['6', 'Mengembangkan soft skills dan karakter mahasiswa', 'Pembinaan & ekstrakurikuler'],
+                ['7', 'Menguatkan tata kelola dan penjaminan mutu', 'Sistem mutu internal'],
+                ['8', 'Mengembangkan digitalisasi dan literasi media', 'Transformasi digital'],
+            ],
+            stat: '8 misi · 8 strategi · terukur',
+            narrative: 'Misi Prodi Jurnalistik Islam mencakup delapan pilar strategis yang mencakup tridharma perguruan tinggi, pengembangan keilmuan, jejaring, karakter mahasiswa, tata kelola, dan digitalisasi. Setiap misi dilengkapi dengan strategi implementasi yang jelas dan terukur.',
+            chart: null
+        };
+
+        detailData['vtms-tujuan'] = {
+            title: 'Tujuan Program Studi Jurnalistik Islam',
+            subtitle: '5 tujuan jangka menengah dan panjang',
+            headers: ['Tujuan', 'Target', 'Timeline'],
+            rows: [
+                ['Menghasilkan lulusan jurnalis profesional dan beretika Islam', '90% terserap kerja', '2028'],
+                ['Menghasilkan publikasi ilmiah bereputasi', '30 publikasi Sinta/Scopus', '2027'],
+                ['Membangun pusat kajian jurnalistik Islam', 'Terakreditasi nasional', '2028'],
+                ['Mewujudkan tata kelola prodi yang unggul', 'Akreditasi Unggul', '2028'],
+                ['Memperkuat peran sebagai mitra media nasional', '10 media mitra', '2027'],
+            ],
+            stat: '5 tujuan · 5 target · timeline 2027–2028',
+            narrative: 'Tujuan prodi dirumuskan untuk menjawab tantangan pengembangan keilmuan jurnalistik Islam di era digital. Target akreditasi Unggul dan publikasi bereputasi menjadi prioritas utama. Penguatan peran sebagai mitra media juga menjadi strategi untuk meningkatkan visibilitas dan relevansi prodi di dunia industri.',
+            chart: null
+        };
+
+        detailData['vtms-sasaran'] = {
+            title: 'Sasaran Strategis 2024–2028',
+            subtitle: '10 sasaran terukur periode 2024–2028',
+            headers: ['Sasaran', 'Indikator', 'Target 2028'],
+            rows: [
+                ['S1: IPK Lulusan', 'Rata-rata IPK', '≥ 3,50'],
+                ['S2: Masa Studi', 'Persentase lulus tepat waktu', '≥ 75%'],
+                ['S3: Daya Serap', 'Persentase lulusan bekerja', '≥ 90%'],
+                ['S4: Kepuasan Pengguna', 'Skor kepuasan', '≥ 85%'],
+                ['S5: Publikasi Dosen', 'Jumlah publikasi Sinta/Scopus', '≥ 30'],
+                ['S6: Penelitian Mahasiswa', 'Mahasiswa terlibat penelitian', '≥ 50%'],
+                ['S7: Kerjasama', 'Jumlah mitra aktif', '≥ 25'],
+                ['S8: Akreditasi', 'Peringkat akreditasi', 'Unggul'],
+                ['S9: Digitalisasi', 'Sistem terintegrasi', '100%'],
+                ['S10: Reputasi', 'Pengakuan nasional', 'Terakreditasi'],
+            ],
+            stat: '10 sasaran · 10 indikator · target 2028',
+            narrative: 'Sasaran strategis prodi dijabarkan dalam 10 indikator kinerja utama (IKU) yang terukur dan memiliki timeline pencapaian hingga tahun 2028. Sasaran ini mencakup aspek akademik (IPK, masa studi), daya saing lulusan, penelitian, kerjasama, akreditasi, dan digitalisasi. Monitoring dilakukan secara berkala setiap semester untuk memastikan pencapaian target.',
+            chart: null
+        };
+
+        // ---- Kurikulum ----
+        detailData['6.1'] = {
+            title: 'Dokumen Kurikulum Jurnalistik Islam',
+            subtitle: 'Struktur kurikulum 52 mata kuliah · 144 SKS · 8 semester',
+            headers: ['No', 'Semester', 'Kode', 'Nama MK', 'SKS', 'Unit'],
+            rows: [
+                ['1', '1', 'NAS-101', 'Pancasila', 2, 'Universitas'],
+                ['2', '1', 'NAS-102', 'Bahasa Indonesia', 2, 'Universitas'],
+                ['3', '1', 'SAS-102', 'Bahasa Arab', 2, 'Universitas'],
+                ['4', '1', 'SAS-103', 'Studi Islam Interdisipliner', 3, 'Universitas'],
+                ['5', '1', 'TAR-101', 'Ilmu Pendidikan', 3, 'PS'],
+                ['6', '1', 'JUR-101', 'Pengantar Jurnalistik', 3, 'PS'],
+                ['7', '1', 'JUR-102', 'Dasar-Dasar Komunikasi', 2, 'PS'],
+                ['8', '1', 'JUR-103', 'Etika Jurnalistik', 3, 'PS'],
+                ['9', '2', 'NAS-201', 'Kewarganegaraan', 2, 'PS'],
+                ['10', '2', 'NAS-202', 'Bahasa Inggris', 2, 'PS'],
+                ['11', '2', 'JUR-201', 'Jurnalistik Radio & TV', 2, 'PS'],
+                ['12', '2', 'TAR-201', 'Kurikulum dan Evaluasi Pendidikan', 3, 'Fakultas'],
+                ['13', '2', 'TAR-202', 'Manajemen Pendidikan', 3, 'Fakultas'],
+                ['14', '2', 'JUR-202', 'Penulisan Berita', 3, 'PS'],
+                ['15', '2', 'JUR-203', 'Teori Komunikasi', 3, 'PS'],
+                ['16', '2', 'JUR-204', 'Jurnalistik Online', 2, 'PS'],
+                ['17', '3', 'TAR-301', 'Filsafat Ilmu', 3, 'Fakultas'],
+                ['18', '3', 'JUR-301', 'Jurnalistik Investigasi', 3, 'PS'],
+                ['19', '3', 'JUR-302', 'Media Sosial', 3, 'PS'],
+                ['20', '3', 'JUR-303', 'Teknik Wawancara', 3, 'PS'],
+                ['21', '3', 'JUR-304', 'Manajemen Media', 3, 'PS'],
+                ['22', '3', 'JUR-305', 'Statistik dan Analisis Data', 3, 'PS'],
+                ['23', '3', 'JUR-306', 'Etika dan Hukum Pers', 2, 'PS'],
+                ['24', '4', 'JUR-401', 'Jurnalistik Data', 3, 'PS'],
+                ['25', '4', 'JUR-402', 'Jurnalistik Traumatik', 3, 'PS'],
+                ['26', '4', 'JUR-403', 'Jurnalistik Karir', 3, 'PS'],
+                ['27', '4', 'JUR-404', 'Metodologi Penelitian', 3, 'PS'],
+                ['28', '4', 'JUR-405', 'Teknologi Informasi dan Media Jurnalistik', 3, 'PS'],
+                ['29', '4', 'JUR-406', 'Jurnalistik Multikultural', 3, 'PS'],
+                ['30', '4', 'JUR-407', 'Manajemen dan Evaluasi Program Jurnalistik', 3, 'PS'],
+                ['31', '5', 'JUR-501', 'Jurnalistik Keluarga', 3, 'PS'],
+                ['32', '5', 'JUR-502', 'Jurnalistik Krisis dan Bencana', 3, 'PS'],
+                ['33', '5', 'JUR-503', 'Filsafat dan Nilai Budaya Melayu', 2, 'PS'],
+                ['34', '5', 'JUR-504', 'Neurojurnalistik', 2, 'PS'],
+                ['35', '5', 'JUR-505', 'Assessment dalam Jurnalistik', 3, 'PS'],
+                ['36', '5', 'JUR-506', 'Cyber Journalism', 2, 'PS'],
+                ['37', '5', 'JUR-507', 'Praktik Penelitian Jurnalistik', 3, 'PS'],
+                ['38', '5', 'SAS-202', 'Digitalpreuner', 2, 'Universitas'],
+                ['39', '6', 'SAS-203', 'Islam Multikultural', 2, 'Universitas'],
+                ['40', '6', 'JUR-601', 'Jurnalistik Berbasis Budaya Melayu', 2, 'PS'],
+                ['41', '6', 'JUR-602', 'Dinamika Keluarga dan Resolusi Konflik', 3, 'PS'],
+                ['42', '6', 'JUR-603', 'Tafsir dan Hadits Jurnalistik', 3, 'PS'],
+                ['43', '6', 'JUR-604', 'Inovasi dan Transformasi Digital dalam Jurnalistik', 3, 'PS'],
+                ['44', '6', 'JUR-605', 'Supervisi Jurnalistik', 3, 'PS'],
+                ['45', '6', 'JUR-606', 'Jurnalistik Komunitas Berbasis Kearifan Lokal', 2, 'PS'],
+                ['46', '6', 'JUR-607', 'Mediasi dan Resolusi Konflik Sekolah', 3, 'PS'],
+                ['47', '7', 'JUR-701', 'Tata Kelola Layanan Jurnalistik', 4, 'PS'],
+                ['48', '7', 'SAS-501', 'KKN', 4, 'Universitas'],
+                ['49', '7', 'JUR-702', 'Praktikum Jurnalistik Kelompok', 4, 'PS'],
+                ['50', '7', 'JUR-703', 'Praktikum Jurnalistik Individual', 4, 'PS'],
+                ['51', '7', 'JUR-704', 'PPL-Jurnalistik', 4, 'PS'],
+                ['52', '8', 'SAS-801', 'Tugas Akhir', 6, 'Universitas']
+            ],
+            stat: 'Total 52 MK · 144 SKS · 8 semester · 3 unit penyelenggara',
+            narrative: 'Kurikulum Jurnalistik Islam dirancang dengan pendekatan integratif antara keilmuan jurnalistik, komunikasi, dan nilai-nilai Islam. Terdapat keseimbangan antara teori (75%) dan praktik (25%). Mata kuliah seperti Jurnalistik Online, Cyber Journalism, dan Media Sosial menunjukkan respons terhadap tantangan digital. Kearifan lokal Melayu dan pendekatan Islami menjadi keunggulan tersendiri yang membedakan prodi ini dari prodi jurnalistik umum.',
+            chart: 'sks_per_semester'
+        };
+
+        // ---- Prestasi Mahasiswa ----
+        detailData['3.2'] = {
+            title: 'Prestasi Mahasiswa Jurnalistik Islam',
+            subtitle: '11 prestasi tingkat internasional, nasional, dan lokal',
+            headers: ['No', 'Nama Kegiatan', 'Tanggal', 'Tingkat', 'Prestasi'],
+            rows: [
+                ['1', 'OSGC III', '18/12/2025', 'Internasional', 'Juara 1 Konseling Individu'],
+                ['2', '3rd SeiBa Internasional Festival 2025', '30/9/2024', 'Internasional', 'Juara 1 Puisi'],
+                ['3', 'Lomba Master Chef', '31/10/2025', 'Internasional', 'Juara III'],
+                ['4', '3rd SeiBa Internasional Festival 2025', '2025-04-10', 'Internasional', 'Juara 1 Traditional Dance'],
+                ['5', 'Festival Mahasiswa Jurnalistik 2025', '19/11/2025', 'Nasional', 'Juara 1 Video Jurnalistik'],
+                ['6', 'Kompetisi Jurnalistik 2025', '20/6/2025', 'Nasional', 'Juara 1 Konten Digital'],
+                ['7', 'Kompetisi Jurnalistik 2025', '20/6/2025', 'Nasional', 'Juara 2 One Minute Motivation'],
+                ['8', 'Kompetisi Jurnalistik 2025', '20/6/2025', 'Nasional', 'Juara 2 Poster Digital'],
+                ['9', 'Festival Formasi KIP-K 2025', '18/12/2025', 'Nasional', 'Juara 3 Kompetisi Esai & Best Presentation'],
+                ['10', 'BABEL YouthPreneur 2025', '17/12/2025', 'Lokal', 'Juara 1 Company Profile'],
+                ['11', 'MTQH XXXIII Kota Pangkalpinang 2025', '26/7/2025', 'Lokal', 'Juara 1 Karya Tulis Ilmiah Hadist'],
+            ],
+            stat: 'Total 11 prestasi · 4 Internasional · 5 Nasional · 2 Lokal',
+            narrative: 'Mahasiswa Jurnalistik Islam telah meraih 11 prestasi di tingkat internasional, nasional, dan lokal. Dominasi prestasi di bidang penulisan, konten digital, dan jurnalistik menunjukkan kualitas kompetensi yang sesuai dengan profil lulusan. Prestasi internasional dari OSGC dan SeiBa Festival menunjukkan daya saing global mahasiswa. Kehadiran prestasi di bidang keagamaan (MTQH) juga menegaskan penguatan nilai-nilai Islam.',
+            chart: 'prestasi_tingkat'
+        };
+
+        // ---- GUG PPKS ----
+        detailData['gug-ppks'] = {
+            title: 'GUG – Pencegahan & Penanganan Kekerasan Seksual (PPKS)',
+            subtitle: 'Implementasi Permendikbud No. 30/2021',
+            headers: ['Kebijakan', 'Status', 'Keterangan'],
+            rows: [
+                ['Regulasi PPKS', 'Aktif', 'Sesuai Permendikbud No. 30/2021'],
+                ['Tim Satgas PPKS', 'Terbentuk', 'Dosen & mahasiswa terlatih'],
+                ['Sosialisasi', 'Rutin', 'Setiap tahun ajaran baru'],
+                ['Layanan Pengaduan', 'Tersedia', 'Saluran khusus & konseling'],
+                ['Pelatihan Konselor Sebaya', 'Berjalan', 'Mahasiswa terlatih sebagai pendamping'],
+            ],
+            stat: '5 pilar PPKS · aktif dan terintegrasi',
+            narrative: 'Prodi Jurnalistik Islam memiliki Gugus Tugas PPKS yang aktif. Kebijakan pencegahan dan penanganan kekerasan seksual telah diimplementasikan melalui sosialisasi, pembentukan satgas, dan layanan pengaduan. Pelatihan konselor sebaya juga dilakukan untuk memperkuat upaya pencegahan di tingkat mahasiswa. Ini menciptakan lingkungan kampus yang aman, inklusif, dan berkeadilan.',
+            chart: null
+        };
+
+        // ---- Keuangan: Beasiswa ----
+        detailData['keuangan-beasiswa'] = {
+            title: 'Beasiswa & Bantuan Finansial',
+            subtitle: 'Skema bantuan untuk mahasiswa Jurnalistik Islam',
+            headers: ['Jenis Beasiswa', 'Jumlah Penerima', 'Periode'],
+            rows: [
+                ['KIP Kuliah', '45 mahasiswa', '2024/2025'],
+                ['Beasiswa Prestasi', '10 mahasiswa', 'Setiap semester'],
+                ['Beasiswa PPA', '15 mahasiswa', '2024/2025'],
+                ['Bantuan UKT', '30 mahasiswa', 'Setiap semester'],
+                ['Beasiswa Unggulan', '5 mahasiswa', '2024/2025'],
+            ],
+            stat: '5 jenis bantuan · 105+ penerima',
+            narrative: 'Program bantuan finansial tersedia bagi mahasiswa melalui berbagai skema beasiswa dan bantuan UKT. Total penerima mencapai lebih dari 105 mahasiswa per tahun, memastikan akses pendidikan yang adil dan merata bagi seluruh mahasiswa Jurnalistik Islam. Program beasiswa unggulan juga diberikan untuk mahasiswa berprestasi sebagai bentuk apresiasi.',
+            chart: 'beasiswa_distribusi'
+        };
+
+        // ---- Kepuasan Pengguna ----
+        detailData['kepuasan-pengguna'] = {
+            title: 'Kepuasan Pengguna Lulusan',
+            subtitle: 'Evaluasi dari pengguna lulusan Jurnalistik Islam',
+            headers: ['Aspek', 'Skor (%)', 'Keterangan'],
+            rows: [
+                ['Etika & Profesionalisme', '87', 'Sangat Baik'],
+                ['Kompetensi Keilmuan', '85', 'Sangat Baik'],
+                ['Kemampuan Komunikasi', '90', 'Sangat Baik'],
+                ['Kerjasama Tim', '88', 'Sangat Baik'],
+                ['Kreativitas & Inovasi', '84', 'Baik'],
+                ['Penguasaan Teknologi', '86', 'Sangat Baik'],
+            ],
+            stat: '6 aspek · rata-rata 86,7% · kategori Sangat Baik',
+            narrative: 'Kepuasan pengguna lulusan berada pada kategori sangat baik dengan rata-rata 86,7%. Aspek kemampuan komunikasi (90%) dan kerjasama tim (88%) mendapat nilai tertinggi, menunjukkan lulusan Jurnalistik Islam memiliki soft skills yang kuat. Aspek kreativitas dan inovasi (84%) menjadi area yang masih dapat ditingkatkan melalui penguatan project-based learning dan inkubasi kewirausahaan.',
+            chart: 'kepuasan_pengguna'
+        };
+
+        // ---- Layanan Kesehatan ----
+        detailData['layanan-kesehatan'] = {
+            title: 'Layanan Kesehatan Mahasiswa',
+            subtitle: 'Fasilitas dan program kesehatan',
+            headers: ['Layanan', 'Status', 'Keterangan'],
+            rows: [
+                ['Klinik Kesehatan', 'Tersedia', 'Layanan medis dasar & rujukan'],
+                ['Konseling Psikologi', 'Tersedia', 'Konseling individu & kelompok'],
+                ['UKS', 'Aktif', 'Unit Kesehatan Sekolah di lingkungan kampus'],
+                ['Sosialisasi Kesehatan', 'Rutin', 'Kampanye kesehatan mental & fisik'],
+                ['Asuransi Kesehatan', 'Tersedia', 'BPJS Kesehatan untuk mahasiswa'],
+            ],
+            stat: '5 layanan kesehatan · semua tersedia',
+            narrative: 'Prodi Jurnalistik Islam menyediakan layanan kesehatan yang komprehensif bagi mahasiswa, mulai dari klinik kesehatan, konseling psikologi, hingga asuransi kesehatan. Sosialisasi kesehatan mental dan fisik dilakukan secara rutin untuk meningkatkan kesadaran mahasiswa akan pentingnya menjaga kesehatan. Layanan konseling psikologi menjadi bagian penting dalam mendukung kesejahteraan mental mahasiswa.',
+            chart: null
+        };
+
+        // ================================================================
+        //  FALLBACK untuk sub-card lain
+        // ================================================================
+
+        function getFallbackDetail(id) {
+            return {
+                title: `Detail Tabel ${id}`,
+                subtitle: 'Data sedang dalam pengembangan',
+                headers: ['Informasi', 'Keterangan'],
+                rows: [
+                    ['Status', 'Segera hadir'],
+                    ['Catatan', 'Tim sedang menyusun data dan analisis']
+                ],
+                stat: 'Data akan diperbarui',
+                narrative: `Detail untuk ${id} akan segera dilengkapi dengan analisis mendalam dan visualisasi data.`,
+                chart: null
+            };
+        }
+
+        // ================================================================
+        //  RENDER DASHBOARD
+        // ================================================================
+
+        function renderDashboard() {
+            const grid = document.getElementById('dashboardGrid');
+            grid.innerHTML = '';
+
+            dashboardData.forEach(main => {
+                const card = document.createElement('div');
+                card.className = 'main-card';
+
+                let subCardsHtml = '';
+                main.subCards.forEach(sub => {
+                    subCardsHtml += `
+                                <div class="sub-card" data-id="${sub.id}">
+                                    <div class="info">
+                                        <span class="label">${sub.label}</span>
+                                        <span class="desc">${sub.desc}</span>
+                                    </div>
+                                    <span class="badge">${sub.badge}</span>
+                                    <span class="arrow">→</span>
+                                </div>
+                            `;
+                });
+
+                card.innerHTML = `
+                            <div class="main-card-header">
+                                <span class="icon">${main.icon}</span>
+                                <div class="title-group">
+                                    <h2>${main.title}</h2>
+                                    <div class="subtitle">${main.subtitle}</div>
+                                </div>
+                            </div>
+                            <div class="main-card-body">
+                                ${subCardsHtml}
+                            </div>
+                        `;
+
+                grid.appendChild(card);
+            });
+
+            // Event listener untuk sub-card
+            document.querySelectorAll('.sub-card').forEach(el => {
+                el.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    openModal(id);
+                });
+            });
+        }
+
+        // ================================================================
+        //  MODAL
+        // ================================================================
+
+        let chartInstances = {};
+
+        function openModal(id) {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+
+            let detail = detailData[id];
+            if (!detail) {
+                detail = getFallbackDetail(id);
+            }
+
+            // Build table
+            let tableHtml = '';
+            if (detail.headers && detail.rows) {
+                tableHtml = `
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>${detail.headers.map(h => `<th>${h}</th>`).join('')}</tr>
+                                    </thead>
+                                    <tbody>
+                                        ${detail.rows.map(row => `<tr>${row.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+            }
+
+            let statHtml = detail.stat ? `
+                        <div class="stat-box">
+                            <span>📊 ${detail.stat}</span>
+                        </div>
+                    ` : '';
+
+            let narrativeHtml = detail.narrative ? `
+                        <div class="narrative">
+                            <strong>📝 Analisis & Interpretasi</strong><br>
+                            ${detail.narrative}
+                        </div>
+                    ` : '';
+
+            let chartHtml = '';
+            if (detail.chart) {
+                chartHtml = `
+                            <div class="chart-container">
+                                <canvas id="modalChart"></canvas>
+                            </div>
+                        `;
+            }
+
+            content.innerHTML = `
+                        <div class="modal-title">${detail.title}</div>
+                        <div class="modal-subtitle">${detail.subtitle}</div>
+                        ${statHtml}
+                        ${tableHtml}
+                        ${chartHtml}
+                        ${narrativeHtml}
+                    `;
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            if (detail.chart) {
+                setTimeout(() => initModalChart(detail.chart), 100);
+            }
+        }
+
+        // ================================================================
+        //  CHART IN MODAL
+        // ================================================================
+
+        function initModalChart(chartType) {
+            const canvas = document.getElementById('modalChart');
+            if (!canvas) return;
+
+            if (chartInstances.modal) {
+                chartInstances.modal.destroy();
+                delete chartInstances.modal;
+            }
+
+            let data, labels, label, colors;
+
+            switch (chartType) {
+                case 'sks_per_semester':
+                    labels = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'];
+                    data = [20, 19, 20, 21, 20, 20, 18, 6];
+                    label = 'SKS';
+                    colors = data.map(v => v >= 20 ? 'rgba(34, 197, 94, 0.7)' : 'rgba(251, 191, 36, 0.7)');
+                    break;
+                case 'prestasi_tingkat':
+                    labels = ['Internasional', 'Nasional', 'Lokal'];
+                    data = [4, 5, 2];
+                    label = 'Jumlah Prestasi';
+                    colors = ['rgba(34, 197, 94, 0.7)', 'rgba(251, 191, 36, 0.7)', 'rgba(96, 165, 250, 0.7)'];
+                    break;
+                case 'beasiswa_distribusi':
+                    labels = ['KIP Kuliah', 'Prestasi', 'PPA', 'Bantuan UKT', 'Unggulan'];
+                    data = [45, 10, 15, 30, 5];
+                    label = 'Jumlah Penerima';
+                    colors = ['rgba(34, 197, 94, 0.7)', 'rgba(52, 211, 153, 0.7)', 'rgba(96, 165, 250, 0.7)',
+                        'rgba(251, 191, 36, 0.7)', 'rgba(244, 63, 94, 0.7)'
+                    ];
+                    break;
+                case 'kepuasan_pengguna':
+                    labels = ['Etika', 'Kompetensi', 'Komunikasi', 'Kerjasama', 'Kreativitas', 'Teknologi'];
+                    data = [87, 85, 90, 88, 84, 86];
+                    label = 'Skor (%)';
+                    colors = data.map(v => v >= 85 ? 'rgba(34, 197, 94, 0.7)' : 'rgba(251, 191, 36, 0.7)');
+                    break;
+                default:
+                    return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            chartInstances.modal = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label || 'Nilai',
+                        data: data,
+                        backgroundColor: colors || 'rgba(34, 197, 94, 0.6)',
+                        borderColor: 'rgba(34, 197, 94, 0.8)',
+                        borderWidth: 1.5,
+                        borderRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.parsed.y} ${label ? '' : ''}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(34, 197, 94, 0.08)' },
+                            ticks: { color: '#88c0a0' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#88c0a0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ================================================================
+        //  MODAL CONTROL
+        // ================================================================
+
+        function closeModal() {
+            const overlay = document.getElementById('modalOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            if (chartInstances.modal) {
+                chartInstances.modal.destroy();
+                delete chartInstances.modal;
+            }
+        }
+
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', renderDashboard);
+    </script>
+
+</body>
+</html>
