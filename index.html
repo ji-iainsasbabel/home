@@ -604,6 +604,7 @@
             title: 'Layanan Kemahasiswaan',
             subtitle: 'Kesehatan, K3, Akademik, dan Lainnya',
             subCards: [
+                { id: 'laporan-layanan', label: 'Laporan Layanan Kemahasiswaan', desc: 'laporan dan analisis mengenai layanan kemahasiswa secara umum', badge: 'Lengkap' },
                 { id: 'layanan-kesehatan', label: 'Layanan Kesehatan', desc: 'Klinik, konseling, dan UKS', badge: 'Tersedia' },
                 { id: 'layanan-k3', label: 'K3 (Keselamatan & Kesehatan Kerja)', desc: 'Sosialisasi & protokol', badge: 'Siap' },
                 { id: 'layanan-akademik', label: 'Layanan Akademik', desc: 'Bimbingan, tutorial, dan administrasi', badge: 'Lengkap' },
@@ -910,8 +911,13 @@
                 el.addEventListener('click', function() {
                     const id = this.dataset.id;
         
-                    // 🔥 Redirect khusus untuk Layanan Kemahasiswaan
+        // 🔥 Redirect khusus untuk Layanan Kemahasiswaan
         if (id === 'layanan-kemahasiswaan') {
+            window.location.href = 'https://ji-iainsasbabel.github.io/layanan-kemahasiswaan/';
+            return;
+            
+            // 🔥 Redirect khusus untuk laporan  Layanan Kemahasiswaan
+        if (id === 'laporan-layanan') {
             window.location.href = 'https://ji-iainsasbabel.github.io/layanan-kemahasiswaan/';
             return;
         }
