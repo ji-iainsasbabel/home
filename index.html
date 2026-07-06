@@ -909,6 +909,12 @@
             document.querySelectorAll('.sub-card').forEach(el => {
                 el.addEventListener('click', function() {
                     const id = this.dataset.id;
+        
+                    // 🔥 Redirect khusus untuk Layanan Kemahasiswaan
+        if (id === 'layanan-kemahasiswaan') {
+            window.location.href = 'layanan-kemahasiswaan.html';
+            return;
+        }
                     openModal(id);
                 });
             });
